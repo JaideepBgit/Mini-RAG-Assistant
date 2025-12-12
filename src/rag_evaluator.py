@@ -71,7 +71,6 @@ class RAGEvaluator:
         if not retrieved_docs or not answer:
             return {'grounding_score': 0.0, 'method': 'empty'}
         
-        # Method 1: LLM-based evaluation (most accurate)
         if use_llm and self.llm_client:
             return self._llm_grounding_check(answer, retrieved_docs)
         

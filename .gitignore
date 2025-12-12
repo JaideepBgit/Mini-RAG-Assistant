@@ -16,3 +16,10 @@ vector_store_openai/
 *.log
 *.docx
 presentation_content.txt
+presentation_slides_condensed.txt
+HIGHLIGHTING_GUIDE.md
+multi_turn_questions.txt
+difficulties_document.txt
+test_questionnaire_guide.txt
+text_docs_improvements_summary.txt
+text_docs/

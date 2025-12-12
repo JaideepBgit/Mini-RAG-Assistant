@@ -1,13 +1,3 @@
-"""
-Example: How to evaluate your RAG system with metrics
-
-This script demonstrates:
-1. Precision@k - Are the retrieved documents relevant?
-2. Grounding accuracy - Is the answer supported by the documents?
-3. Answer relevancy - Does the answer address the question?
-4. Full evaluation suite
-"""
-
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -22,30 +12,22 @@ load_dotenv()
 
 
 def example_basic_metrics():
-    """Example 1: Basic evaluation without LLM"""
     print("=" * 60)
     print("Example 1: Basic Metrics (No LLM required)")
     print("=" * 60)
     
-    # Initialize components
     api_key = os.getenv("OPENAI_API_KEY")
     vector_store = VectorStoreManager(api_key)
     
-    # Load existing vector store
     vector_store.load("vector_store_openai/faiss_index")
     
-    # Query
     question = "What is the vacation policy?"
     retrieved_docs = vector_store.similarity_search(question, k=5)
     
-    # Initialize evaluator (no LLM needed for basic metrics)
     evaluator = RAGEvaluator()
     
-    # Example: You know which documents are actually relevant
-    # In practice, you'd have human-labeled ground truth
-    relevant_doc_ids = ["docs/sample_policy.txt"]  # Ground truth
+    relevant_doc_ids = ["docs/sample_policy.txt"]
     
-    # Calculate Precision@3
     precision_3 = evaluator.precision_at_k(retrieved_docs, relevant_doc_ids, k=3)
     print(f"\nPrecision@3: {precision_3:.2%}")
     print(f"  → {precision_3*3:.0f} out of top 3 documents are relevant")
@@ -65,7 +47,6 @@ def example_basic_metrics():
 
 
 def example_grounding_accuracy():
-    """Example 2: Evaluate if answer is grounded in retrieved docs"""
     print("\n" + "=" * 60)
     print("Example 2: Grounding Accuracy (LLM-based)")
     print("=" * 60)
@@ -78,23 +59,19 @@ def example_grounding_accuracy():
     # Load vector store
     vector_store.load("vector_store_openai/faiss_index")
     
-    # Query
     question = "What is the vacation policy?"
     retrieved_docs = vector_store.similarity_search(question, k=3)
     
-    # Generate answer
     result = rag_pipeline.query(question, retrieved_docs)
     answer = result['answer']
     
     print(f"\nQuestion: {question}")
     print(f"\nAnswer: {answer}")
     
-    # Initialize evaluator with LLM
     import openai
     llm_client = openai.OpenAI(api_key=api_key)
     evaluator = RAGEvaluator(llm_client=llm_client)
     
-    # Check grounding
     grounding = evaluator.grounding_accuracy(answer, retrieved_docs, use_llm=True)
     print(f"\nGrounding Score: {grounding['grounding_score']:.2%}")
     print(f"Method: {grounding['method']}")
@@ -110,7 +87,6 @@ def example_grounding_accuracy():
 
 
 def example_answer_relevancy():
-    """Example 3: Evaluate if answer addresses the question"""
     print("\n" + "=" * 60)
     print("Example 3: Answer Relevancy")
     print("=" * 60)
@@ -123,23 +99,19 @@ def example_answer_relevancy():
     # Load vector store
     vector_store.load("vector_store_openai/faiss_index")
     
-    # Query
     question = "How many vacation days do employees get?"
     retrieved_docs = vector_store.similarity_search(question, k=3)
     
-    # Generate answer
     result = rag_pipeline.query(question, retrieved_docs)
     answer = result['answer']
     
     print(f"\nQuestion: {question}")
     print(f"\nAnswer: {answer}")
     
-    # Initialize evaluator with LLM
     import openai
     llm_client = openai.OpenAI(api_key=api_key)
     evaluator = RAGEvaluator(llm_client=llm_client)
     
-    # Check relevancy
     relevancy = evaluator.answer_relevancy(question, answer, use_llm=True)
     print(f"\nRelevancy Score: {relevancy['relevancy_score']:.2%}")
     print(f"Method: {relevancy['method']}")
@@ -155,7 +127,6 @@ def example_answer_relevancy():
 
 
 def example_full_evaluation():
-    """Example 4: Complete evaluation suite"""
     print("\n" + "=" * 60)
     print("Example 4: Full Evaluation Suite")
     print("=" * 60)
@@ -168,26 +139,21 @@ def example_full_evaluation():
     # Load vector store
     vector_store.load("vector_store_openai/faiss_index")
     
-    # Query
     question = "What is the vacation policy?"
     retrieved_docs = vector_store.similarity_search(question, k=5)
     
-    # Generate answer
     result = rag_pipeline.query(question, retrieved_docs)
     answer = result['answer']
     
     print(f"\nQuestion: {question}")
     print(f"\nAnswer: {answer[:200]}...")
     
-    # Initialize evaluator with LLM
     import openai
     llm_client = openai.OpenAI(api_key=api_key)
     evaluator = RAGEvaluator(llm_client=llm_client)
     
-    # Ground truth (in practice, you'd have this from human annotation)
     relevant_doc_ids = ["docs/sample_policy.txt"]
     
-    # Run full evaluation
     eval_results = evaluator.evaluate_full(
         question=question,
         answer=answer,
@@ -225,7 +191,6 @@ def example_full_evaluation():
 
 
 def example_batch_evaluation():
-    """Example 5: Evaluate multiple queries"""
     print("\n" + "=" * 60)
     print("Example 5: Batch Evaluation")
     print("=" * 60)
@@ -238,12 +203,10 @@ def example_batch_evaluation():
     # Load vector store
     vector_store.load("vector_store_openai/faiss_index")
     
-    # Initialize evaluator
     import openai
     llm_client = openai.OpenAI(api_key=api_key)
     evaluator = RAGEvaluator(llm_client=llm_client)
     
-    # Test queries
     test_queries = [
         "What is the vacation policy?",
         "How many sick days are allowed?",
@@ -288,9 +251,8 @@ def example_batch_evaluation():
 
 
 if __name__ == "__main__":
-    print("\n🔍 RAG Evaluation Examples\n")
+    print("\n RAG Evaluation Examples\n")
     
-    # Run examples
     try:
         example_basic_metrics()
         example_grounding_accuracy()
@@ -305,7 +267,7 @@ if __name__ == "__main__":
         print("3. Track metrics over time to measure improvements")
         
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        print(f"\n Error: {e}")
         print("\nMake sure:")
         print("1. OPENAI_API_KEY is set in .env")
         print("2. Vector store exists at vector_store_openai/faiss_index")
