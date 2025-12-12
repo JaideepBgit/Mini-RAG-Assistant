@@ -1,5 +1,7 @@
 Mini RAG Assistant
 
+Live Demo: https://mini-rag-assistant-cxwtk46n9wrmtmwexhaxj7.streamlit.app
+
 Problem Statement
 
 This project addresses the challenge faced by consulting firms managing multiple client knowledge repositories. Currently, analysts manually search through internal policies, process manuals, and product guides to find answers, which is slow and error-prone. This RAG Assistant demonstrates how retrieval-augmented generation can automate this process while maintaining accuracy and transparency.
