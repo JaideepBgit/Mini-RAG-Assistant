@@ -77,20 +77,20 @@ class TextHighlighter:
             return [0.0] * len(sentences)
 
     def highlight_text(
-        self, text: str, query: str, similarity_threshold: float = 0.5
+        self, text: str, response: str, similarity_threshold: float = 0.5
     ) -> str:
-        if not text or not query:
+        if not text or not response:
             return text
 
         text = re.sub(r'\n\s*\n', '\n\n', text)
         text = re.sub(r'[ \t]+', ' ', text)
         text = text.strip()
 
-        keywords = self._extract_keywords(query)
+        keywords = self._extract_keywords(response)
 
         sentences = self._split_into_sentences(text)
 
-        similarities = self._calculate_sentence_similarity(query, sentences)
+        similarities = self._calculate_sentence_similarity(response, sentences)
 
         highlighted_text = text
 
